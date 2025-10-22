@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>资讯阅读界面测试</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .screen {
+            background: white;
+            border-radius: 15px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 400px;
+            width: 100%;
+            position: relative;
+            min-height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .primary-btn {
+            background: #4CAF50;
+            color: white;
+        }
+        .primary-btn:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+        }
+        .secondary-btn {
+            background: #2196F3;
+            color: white;
+        }
+        .secondary-btn:hover {
+            background: #1976D2;
+        }
+
+        /* 资讯界面样式 */
+        .news-header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+        }
+        .news-header h1 {
+            color: white;
+            margin: 0;
+            text-align: left;
+            font-size: 24px;
+        }
+        .news-category {
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .news-content {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+        }
+        .news-article {
+            margin-bottom: 30px;
+        }
+        .news-title {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .news-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .news-body {
+            color: #34495e;
+            line-height: 1.8;
+        }
+        .news-body p {
+            margin-bottom: 15px;
+        }
+
+        /* 版本A：普通文字返回提示 */
+        .version-a .return-text {
+            color: #34495e;
+            font-size: 14px;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .version-a .return-text:hover {
+            color: #2c3e50;
+            background-color: #f8f9fa;
+        }
+
+        /* 版本B：左上角返回箭头按钮 */
+        .version-b .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2c3e50;
+            padding: 8px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .version-b .back-button:hover {
+            background: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+
+        .progress {
+            text-align: center;
+            color: #666;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+        #dataOutput {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e8f5e8;
+            border-radius: 8px;
+            border: 1px solid #4CAF50;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+        .task-instruction {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #2196F3;
+            text-align: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .instruction-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .version-info {
+            text-align: center;
+            color: #666;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        /* 欢迎屏幕样式 */
+        .welcome-content {
+            padding: 30px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <!-- 欢迎屏幕 -->
+    <div id="welcomeScreen" class="screen">
+        <div class="welcome-content">
+            <h1>📰 资讯界面用户体验测试</h1>
+            <p style="text-align: center; color: #666; margin-bottom: 30px;">感谢您参与本次用户体验研究</p>
+
+            <div style="margin-bottom: 30px;">
+                <p><strong>实验说明：</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>您将测试<strong>2种不同返回方式</strong>的资讯界面设计</li>
+                    <li>每个版本只需要完成<strong>1个简单任务</strong></li>
+                    <li>版本顺序是<strong>随机分配</strong>的</li>
+                    <li>请<strong>尽可能快速且准确</strong>地找到并点击返回方式</li>
+                    <li>整个实验约需要2-3分钟</li>
+                    <li>所有数据将匿名处理，仅用于学术研究</li>
+                </ul>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label for="participantId"><strong>参与者编号：</strong></label>
+                <input type="text" id="participantId" placeholder="例如：P01" style="width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 5px;">
+            </div>
+
+            <button class="primary-btn" onclick="startExperiment()">开始实验</button>
+        </div>
+    </div>
+
+    <!-- 指令屏幕 -->
+    <div id="instructionScreen" class="screen hidden">
+        <div class="welcome-content">
+            <h1>任务说明</h1>
+            <div class="task-instruction">
+                <div class="instruction-text">请阅读资讯内容后，找到并点击返回方式</div>
+                <p style="color: #666; font-size: 14px;">请仔细观察界面，找到正确的返回操作</p>
+            </div>
+            <div class="progress" id="progressInfo">版本 1/2</div>
+            <button class="secondary-btn" onclick="startTask()">我准备好了，开始任务</button>
+        </div>
+    </div>
+
+    <!-- 任务屏幕 -->
+    <div id="taskScreen" class="screen hidden version-a">
+        <!-- 资讯头部 -->
+        <div class="news-header">
+            <h1># 资讯</h1>
+            <div class="news-category">
+                <strong>综合新闻</strong>
+                <strong>活动看板</strong>
+            </div>
+        </div>
+
+        <!-- 资讯内容 -->
+        <div class="news-content">
+            <div class="news-article">
+                <!-- 版本A：普通文字返回提示 -->
+                <div class="return-text" onclick="handleReturnClick()">
+                    点击返回新闻综合列表
+                </div>
+
+                <h2 class="news-title" id="articleTitle">智慧图书馆建设新进展：人工智能助力知识服务升级</h2>
+
+                <div class="news-meta">
+                    <strong>发布时间:</strong> 2024-11-20 &nbsp;&nbsp;
+                    <strong>浏览次数:</strong> 128
+                </div>
+
+                <div class="news-body">
+                    <p>在数字化转型的浪潮中，我校图书馆积极推进智慧图书馆建设，近期引入人工智能技术，显著提升了知识服务的效率和质量。</p>
+
+                    <p>新系统通过自然语言处理技术，能够更精准地理解用户的检索需求，提供个性化的文献推荐服务。同时，智能问答机器人的引入，为读者提供了7×24小时不间断的咨询服务。</p>
+
+                    <p>图书馆技术部主任表示："人工智能技术的应用，不仅提高了服务效率，更重要的是能够深入挖掘馆藏资源的价值，为教学科研提供更有力的支持。"</p>
+
+                    <p>目前，该系统已覆盖图书馆的主要服务场景，包括文献检索、参考咨询、阅读推荐等，获得了师生的广泛好评。</p>
+
+                    <p>未来，图书馆计划进一步拓展人工智能的应用范围，探索在知识发现、学术分析等领域的深度应用，为建设世界一流大学提供更优质的文献保障服务。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 版本B：左上角返回箭头按钮 -->
+        <div class="back-button" onclick="handleBackButtonClick()">
+            <span>◀</span> 返回
+        </div>
+
+        <div class="version-info" id="versionInfo">当前版本：文字提示返回方式</div>
+    </div>
+
+    <!-- 实验结束屏幕 -->
+    <div id="endScreen" class="screen hidden">
+        <div class="welcome-content">
+            <h1>✅ 测试完成！</h1>
+            <p style="text-align: center; margin: 20px 0;">感谢您的参与！您的数据已记录。</p>
+
+            <div id="dataOutput"></div>
+
+            <button class="primary-btn" onclick="downloadDataAsCSV()">下载数据CSV文件</button>
+            <button class="secondary-btn" onclick="location.reload()" style="margin-top: 10px;">重新开始（下一位参与者）</button>
+        </div>
+    </div>
+
+    <script>
+        // 实验配置
+        const experimentConfig = {
+            versions: [
+                {
+                    id: 'A',
+                    name: '文字提示返回方式',
+                    class: 'version-a',
+                    description: '页面内容区上方有普通文字"点击返回新闻综合列表"'
+                },
+                {
+                    id: 'B',
+                    name: '左上角箭头返回方式',
+                    class: 'version-b',
+                    description: '页面左上角有返回箭头按钮"◀ 返回"'
+                }
+            ],
+            articles: [
+                {
+                    title: '智慧图书馆建设新进展：人工智能助力知识服务升级',
+                    content: `在数字化转型的浪潮中，我校图书馆积极推进智慧图书馆建设，近期引入人工智能技术，显著提升了知识服务的效率和质量。
+
+新系统通过自然语言处理技术，能够更精准地理解用户的检索需求，提供个性化的文献推荐服务。同时，智能问答机器人的引入，为读者提供了7×24小时不间断的咨询服务。
+
+图书馆技术部主任表示："人工智能技术的应用，不仅提高了服务效率，更重要的是能够深入挖掘馆藏资源的价值，为教学科研提供更有力的支持。"
+
+目前，该系统已覆盖图书馆的主要服务场景，包括文献检索、参考咨询、阅读推荐等，获得了师生的广泛好评。`
+                },
+                {
+                    title: '数字资源访问量创新高：电子文献成为学术研究主力',
+                    content: `根据最新统计数据显示，本学期我校数字资源访问量较去年同期增长45%，电子文献已成为师生学术研究的首要选择。
+
+图书馆数字资源中心主任介绍，这一增长得益于近年来在数字资源建设方面的持续投入。目前，图书馆已订购中外文数据库286个，电子期刊12万种，电子图书240万册。
+
+"特别是疫情期间，数字资源的重要性更加凸显。"该主任表示，"我们不仅保障了资源的数量，更重要的是提升了服务的便捷性。"
+
+为满足师生多样化的需求，图书馆还推出了移动图书馆APP，支持随时随地访问学术资源，极大方便了师生的学习和科研工作。`
+                },
+                {
+                    title: '图书馆开展"书香校园"系列活动，营造浓厚阅读氛围',
+                    content: `为丰富校园文化生活，培养师生阅读习惯，图书馆本学期启动了"书香校园"系列文化活动，包括读书分享会、名家讲座、图书漂流等多项内容。
+
+活动首场读书分享会邀请了文学院教授与同学们共同探讨经典文学作品，现场气氛热烈。参与学生表示："这样的活动不仅让我们更深入地理解作品，还促进了同学间的思想交流。"
+
+图书馆阅读推广部负责人介绍，后续还将举办数字资源利用培训、学术写作指导等实用型活动，全方位服务师生的学习和科研需求。
+
+"我们希望打造一个充满书香气息的校园环境，让阅读成为每位师生生活的一部分。"该负责人表示。`
+                }
+            ],
+            participantId: '',
+            experimentData: [],
+            currentVersionIndex: 0,
+            versionOrder: [],
+            taskStartTime: 0,
+            currentArticleIndex: 0
+        };
+
+        // 生成随机顺序
+        function generateRandomOrder() {
+            const orders = [['A', 'B'], ['B', 'A']];
+            return orders[Math.floor(Math.random() * orders.length)];
+        }
+
+        // 开始整个实验
+        function startExperiment() {
+            const participantId = document.getElementById('participantId').value.trim();
+            if (!participantId) {
+                alert('请输入参与者编号！');
+                return;
+            }
+
+            experimentConfig.participantId = participantId;
+
+            // 生成随机顺序
+            experimentConfig.versionOrder = generateRandomOrder();
+            console.log(`参与者 ${participantId} 的顺序:`, experimentConfig.versionOrder);
+
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            showInstruction();
+        }
+
+        // 显示任务指令
+        function showInstruction() {
+            const currentVersionId = experimentConfig.versionOrder[experimentConfig.currentVersionIndex];
+            const version = experimentConfig.versions.find(v => v.id === currentVersionId);
+
+            document.getElementById('progressInfo').textContent =
+                `版本 ${experimentConfig.currentVersionIndex + 1}/2`;
+
+            document.getElementById('instructionScreen').classList.remove('hidden');
+        }
+
+        // 开始具体任务
+        function startTask() {
+            document.getElementById('instructionScreen').classList.add('hidden');
+
+            // 设置当前版本
+            const currentVersionId = experimentConfig.versionOrder[experimentConfig.currentVersionIndex];
+            const version = experimentConfig.versions.find(v => v.id === currentVersionId);
+
+            const taskScreen = document.getElementById('taskScreen');
+            taskScreen.className = 'screen ' + version.class;
+
+            // 根据版本显示/隐藏对应的返回方式
+            const returnText = taskScreen.querySelector('.return-text');
+            const backButton = taskScreen.querySelector('.back-button');
+
+            if (version.id === 'A') {
+                returnText.style.display = 'block';
+                backButton.style.display = 'none';
+            } else {
+                returnText.style.display = 'none';
+                backButton.style.display = 'flex';
+            }
+
+            // 随机选择一篇文章
+            experimentConfig.currentArticleIndex = Math.floor(Math.random() * experimentConfig.articles.length);
+            const article = experimentConfig.articles[experimentConfig.currentArticleIndex];
+
+            // 更新文章内容
+            document.getElementById('articleTitle').textContent = article.title;
+
+            // 更新版本信息
+            document.getElementById('versionInfo').textContent = `当前版本：${version.name}`;
+
+            // 显示任务界面
+            taskScreen.classList.remove('hidden');
+
+            // 记录任务开始时间
+            experimentConfig.taskStartTime = Date.now();
+        }
+
+        // 处理版本A的文字点击
+        function handleReturnClick() {
+            recordTaskCompletion();
+        }
+
+        // 处理版本B的返回按钮点击
+        function handleBackButtonClick() {
+            recordTaskCompletion();
+        }
+
+        // 记录任务完成
+        function recordTaskCompletion() {
+            const endTime = Date.now();
+            const reactionTime = endTime - experimentConfig.taskStartTime;
+            const currentVersionId = experimentConfig.versionOrder[experimentConfig.currentVersionIndex];
+            const version = experimentConfig.versions.find(v => v.id === currentVersionId);
+
+            // 记录数据
+            const taskData = {
+                participant: experimentConfig.participantId,
+                version: version.id,
+                versionName: version.name,
+                versionOrder: experimentConfig.versionOrder.join('→'),
+                taskOrder: experimentConfig.currentVersionIndex + 1,
+                articleIndex: experimentConfig.currentArticleIndex,
+                articleTitle: experimentConfig.articles[experimentConfig.currentArticleIndex].title,
+                reactionTime: reactionTime,
+                timestamp: new Date().toISOString()
+            };
+
+            experimentConfig.experimentData.push(taskData);
+            console.log('任务完成数据:', taskData);
+
+            // 进入下一个版本或结束实验
+            experimentConfig.currentVersionIndex++;
+
+            if (experimentConfig.currentVersionIndex < experimentConfig.versionOrder.length) {
+                alert(`✅ 任务完成！\n耗时：${reactionTime}毫秒\n\n点击确定继续下一个版本。`);
+                document.getElementById('taskScreen').classList.add('hidden');
+                showInstruction();
+            } else {
+                alert(`✅ 所有任务完成！\n最后一个任务耗时：${reactionTime}毫秒\n\n感谢您的参与！`);
+                endExperiment();
+            }
+        }
+
+        // 结束实验
+        function endExperiment() {
+            document.getElementById('taskScreen').classList.add('hidden');
+            document.getElementById('endScreen').classList.remove('hidden');
+
+            // 显示收集到的数据
+            const allData = {
+                participant: experimentConfig.participantId,
+                versionOrder: experimentConfig.versionOrder,
+                taskData: experimentConfig.experimentData,
+                exportTime: new Date().toISOString()
+            };
+
+            document.getElementById('dataOutput').style.display = 'block';
+            document.getElementById('dataOutput').textContent = '实验数据（可复制保存）：\n\n' + JSON.stringify(allData, null, 2);
+        }
+
+        // 下载数据为CSV文件
+        function downloadDataAsCSV() {
+            const headers = ['参与者', '版本', '版本名称', '版本顺序', '任务顺序', '文章编号', '文章标题', '反应时间(ms)', '时间戳'];
+            const csvContent = [
+                headers.join(','),
+                ...experimentConfig.experimentData.map(d => [
+                    d.participant,
+                    d.version,
+                    `"${d.versionName}"`,
+                    d.versionOrder,
+                    d.taskOrder,
+                    d.articleIndex,
+                    `"${d.articleTitle}"`,
+                    d.reactionTime,
+                    d.timestamp
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `资讯界面测试数据_${experimentConfig.participantId}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+</body>
+</html>
